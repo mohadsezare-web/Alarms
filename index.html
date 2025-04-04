@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alarm</title>
+    <link rel="stylesheet" href="master.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Aboreto&family=Arima:wght@100..700&family=Atkinson+Hyperlegible+Next:ital,wght@0,200..800;1,200..800&family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Bitter:ital,wght@0,100..900;1,100..900&family=DM+Serif+Text:ital@0;1&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Exo+2:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Parkinsans:wght@300..800&family=Playfair+Display+SC:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Tektur:wght@400..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/fontello.css">
+</head>
+<body>
+    <div class="me">
+        <h1 >Mohadese zare
+            <ul>
+                <li><span class="icon-instagram-1"></span>Mohaddeseh.dev</li>
+                <li><span class="icon-linkedin"></span>Mohadsezare_web</li>
+                <li><span class="icon-github-circled"></span>Mohadsezare_web</li>
+            </ul>
+        </h1>
+    </div>
+    <div class="container">
+        <img src="file/clock-svgrepo-com.svg" style="width: 100px; height: 100px;" alt="">
+        <h1 class="time">23:40:50</h1>
+        <div class="content">
+            <div class="controls">
+                <select>
+                    <option value="Hour" selected hidden>Hour</option>
+                </select>
+            </div>
+            <div class="controls">
+                <select>
+                    <option value="Minute" selected hidden>Minute</option>
+                </select>
+            </div>
+        </div>
+        <button>Set Alarm</button>
+    </div>
+</body>
+<script>
+    const selectmenu = document.querySelectorAll('select')
+    const timebox = document.querySelector('.time')
+    const setalarmbtn = document.querySelector('button')
+    const content = document.querySelector('.content')
+   
+    let alarmtime , alarmState = 'noset'
+    const rington = new Audio('./file/ringtone.mp3')
+    
+    
+    
+    for (let i = 23 ; i >=0 ; i--){
+        i = i < 10 ? '0' + i : i
+        let option = `<option value="${i}">${i}</option>`
+        selectmenu[0].firstElementChild.insertAdjacentHTML('afterend', option)
+    }
+
+    for (let i = 59 ; i >=0 ; i--){
+        i = i < 10 ? '0' + i : i
+        let option = `<option value="${i}">${i}</option>`
+        selectmenu[1].firstElementChild.insertAdjacentHTML('afterend', option)
+    }
+
+
+    setInterval(() => {
+        let date = new Date()
+        let h = date.getHours()
+        let m = date.getMinutes()
+        let s = date.getSeconds()
+        h = h < 10 ? '0' + h : h
+        m = m < 10 ? '0' + m : m
+        s = s < 10 ? '0' + s : s
+        timebox.innerHTML = `${h}:${m}:${s}`
+        if(alarmtime == `${h}:${m}`){
+            rington.play()
+            rington.loop = true
+        }
+    }, 1000);
+
+    setalarmbtn.addEventListener('click', ()=>{
+        alarmtime = `${selectmenu[0].value}:${selectmenu[1].value}`
+        if(alarmtime.includes('Hour') || alarmtime.includes('Minute')){
+            return alert('زمان هشدار را به درستی مشخص کنید!!!')
+        }
+        checkState(alarmState)
+    })
+
+    function checkState (state){
+        if(state == 'noset'){
+            content.classList.add('disable')
+            setalarmbtn.innerText = 'clear Alarm'
+            alarmState = 'set'
+        }else{
+            content.classList.remove('disable')
+            alarmtime = ''
+            rington.pause()
+            alarmState = 'noset'
+            setalarmbtn.innerText = 'Set Alarm'
+        }
+    }
+</script>
+</html>
